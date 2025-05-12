@@ -110,6 +110,8 @@ async def fetch_conference_papers_from_json(json_url, save_path) -> str:
     """
     # 保存的文件夹从url中提取，比如https://dblp.org/search/publ/api?q=toc%3Adb/journals/pvldb/pvldb17.bht%3A&h=1000&format=json，保存的文件夹就应该是pvbldb_17
     save_name = json_url.split("/")[-1].split(".")[0]
+    # 去除.json这个后缀
+    save_name = save_name.split("?")[0]
     save_dir = os.path.join(save_path, save_name)
 
     results = []
