@@ -6,10 +6,10 @@ from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("dblp-conference-paper-list")
 
-def fetch_conference_papers(conference_series, year):
-    save_path = './'
-# @mcp.tool("get_conference_paper_list", "Get conference paper list from DBLP")
-# async def fetch_conference_papers(conference_series: str, year: str, save_path) -> str:
+# def fetch_conference_papers(conference_series, year):
+#     save_path = './'
+@mcp.tool("get_conference_paper_list", "Get conference paper list from DBLP")
+async def fetch_conference_papers(conference_series: str, year: str, save_path) -> str:
     """
     Fetch and display the list of papers for the specified conference and year.
     Handles cases where the conference requires appending -1, -2, etc., to the query.
@@ -94,14 +94,14 @@ def fetch_conference_papers(conference_series, year):
 
     return "Save completed. Save directory: " + save_dir
 
-if __name__ == "__main__":
-    # Example user query
-    user_query = input("Enter the conference query (e.g., 'ICDE 2024'): ")
-    try:
-        # Extract the conference series and year from the query
-        conference_series, year = user_query.split()
-        fetch_conference_papers(conference_series, year)
-    except ValueError:
-        print("Invalid input format. Please use the format 'CONFERENCE YEAR' (e.g., 'ICDE 2024').")
 # if __name__ == "__main__":
-#     mcp.run(transport="stdio")
+#     # Example user query
+#     user_query = input("Enter the conference query (e.g., 'ICDE 2024'): ")
+#     try:
+#         # Extract the conference series and year from the query
+#         conference_series, year = user_query.split()
+#         fetch_conference_papers(conference_series, year)
+#     except ValueError:
+#         print("Invalid input format. Please use the format 'CONFERENCE YEAR' (e.g., 'ICDE 2024').")
+if __name__ == "__main__":
+    mcp.run(transport="stdio")
