@@ -6,9 +6,10 @@ from mcp.server.fastmcp import FastMCP
 
 mcp = FastMCP("dblp-conference-paper-list")
 
-# def fetch_conference_papers(conference_series, year):
-@mcp.tool("get_conference_paper_list", "Get conference paper list from DBLP")
-async def fetch_conference_papers(conference_series: str, year: str, save_path) -> str:
+def fetch_conference_papers(conference_series, year):
+    save_path = './'
+# @mcp.tool("get_conference_paper_list", "Get conference paper list from DBLP")
+# async def fetch_conference_papers(conference_series: str, year: str, save_path) -> str:
     """
     Fetch and display the list of papers for the specified conference and year.
     Handles cases where the conference requires appending -1, -2, etc., to the query.
@@ -40,11 +41,14 @@ async def fetch_conference_papers(conference_series: str, year: str, save_path) 
 
             if total_hits == 0:
                 # If no results and suffix is not empty, stop the loop
-                if suffix:
-                    break
+                if suffix == "":
+                    suffix = f"-{index}"
+                    continue
                 else:
-                    print(f"No papers found for {conference_series.upper()} {year}.")
-                    return
+                    if suffix == "-1":
+                        return f"No papers found for {conference_series.upper()} {year}."
+                    else:
+                        break
 
             # Collect papers from the current query
             hits = data.get("result", {}).get("hits", {}).get("hit", [])
@@ -57,12 +61,14 @@ async def fetch_conference_papers(conference_series: str, year: str, save_path) 
                 # results.append(title)
 
             # Update suffix for the next iteration
-            suffix = f"-{index}"
-            index += 1
+            if suffix != "":
+                suffix = f"-{index}"
+                index += 1
+            else:
+                break
 
         except requests.exceptions.RequestException as e:
-            print(f"Error while accessing DBLP API: {e}")
-            return
+            return f"Error while accessing DBLP API: {e}"
 
     # Display the collected results
     # print(f"\nPapers for {conference_series.upper()} {year}:\n")
@@ -88,14 +94,14 @@ async def fetch_conference_papers(conference_series: str, year: str, save_path) 
 
     return "Save completed. Save directory: " + save_dir
 
-# if __name__ == "__main__":
-#     # Example user query
-#     user_query = input("Enter the conference query (e.g., 'ICDE 2024'): ")
-#     try:
-#         # Extract the conference series and year from the query
-#         conference_series, year = user_query.split()
-#         fetch_conference_papers(conference_series, year)
-#     except ValueError:
-#         print("Invalid input format. Please use the format 'CONFERENCE YEAR' (e.g., 'ICDE 2024').")
 if __name__ == "__main__":
-    mcp.run(transport="stdio")
+    # Example user query
+    user_query = input("Enter the conference query (e.g., 'ICDE 2024'): ")
+    try:
+        # Extract the conference series and year from the query
+        conference_series, year = user_query.split()
+        fetch_conference_papers(conference_series, year)
+    except ValueError:
+        print("Invalid input format. Please use the format 'CONFERENCE YEAR' (e.g., 'ICDE 2024').")
+# if __name__ == "__main__":
+#     mcp.run(transport="stdio")
