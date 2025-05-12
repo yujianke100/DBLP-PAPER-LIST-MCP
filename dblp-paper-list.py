@@ -27,6 +27,9 @@ async def fetch_conference_papers(conference_series: str, year: str, save_path) 
 
     while True:
         # Construct the query
+        # 如果是SIGMOD，需要在年份后面加上c
+        if conference_series.lower() == "sigmod":
+            year = year + "c"
         query = query_template.format(conference_series.lower(), conference_series.lower() + year, suffix)
         api_url = f"{base_url}?q={query}&h=1000&format=json"
 
